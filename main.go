@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"github.com/satori/go.uuid"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +20,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Body:")
 	io.Copy(os.Stdout, r.Body)
+	fmt.Println()
+
+	var cookie http.Cookie
+	cookie.Name = "my-cookie"
+	cookie.Value = uuid.Must(uuid.NewV4()).String()
+	http.SetCookie(w, &cookie)
+
+	fmt.Println()
+	fmt.Printf(" < response containing cookie %s=%s >", cookie.Name, cookie.Value)
 	fmt.Println()
 	fmt.Println("-----")
 	return
